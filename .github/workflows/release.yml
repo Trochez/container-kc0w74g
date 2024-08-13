@@ -1,6 +1,6 @@
 name: Cut Release
 permissions:
-    contents: write
+  contents: write
 
 on:
   push:
@@ -18,12 +18,25 @@ jobs:
       - name: Prepare repository
         run: git fetch --unshallow --tags
 
-      - name: Display the environment variables and their values
+      - name: Check if tag exists
+        id: check_tag
+        run: |
+          TAG_EXISTS=$(git tag -l "v0.0.2")
+          if [ -z "$TAG_EXISTS" ]; then
+            echo "Tag does not exist. Proceeding with release."
+          else
+            echo "Tag already exists. Skipping release."
+            exit 0
+          fi
+
+      - name: Download and prepare `auto`
         run: |
           curl -L -o /tmp/auto.gz https://github.com/intuit/auto/releases/download/v11.1.6/auto-linux.gz
           gzip -d /tmp/auto.gz
           chmod +x /tmp/auto
+
       - name: Create Release
+        if: steps.check_tag.outputs.tag_exists != 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
