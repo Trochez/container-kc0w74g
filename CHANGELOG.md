@@ -1,3 +1,18 @@
+# v0.0.2 (Tue Aug 13 2024)
+
+#### ⚠️ Pushed to `main`
+
+- change release file ([@Trochez](https://github.com/Trochez))
+- fix some details about compose ([@Trochez](https://github.com/Trochez))
+- change container ([@Trochez](https://github.com/Trochez))
+- put files on repo ([@Trochez](https://github.com/Trochez))
+
+#### Authors: 1
+
+- [@Trochez](https://github.com/Trochez)
+
+---
+
 # v0.0.1 (Tue Aug 13 2024)
 
 :tada: This release contains work from a new contributor! :tada:
