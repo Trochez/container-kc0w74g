@@ -1,10 +1,73 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rock Paper Scissors Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #uploadForm {
+            margin-bottom: 20px;
+        }
+        #results {
+            margin-top: 20px;
+        }
+        .result-item {
+            margin-bottom: 15px;
+        }
+        img {
+            max-width: 200px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <h1>Upload a Picture for Rock Paper Scissors Game</h1>
+    <form id="uploadForm">
+        <input type="file" id="fileInput" accept="image/*">
+        <button type="button" onclick="uploadImage()">Upload and Play</button>
+    </form>
+    <div id="results"></div>
 
+    <script>
+        function uploadImage() {
+            let formData = new FormData();
+            let fileInput = document.getElementById('fileInput');
+            if (fileInput.files.length === 0) {
+                alert("Please select a file first.");
+                return;
+            }
 
-{% block header %}
-    Header
-{% endblock header %}
+            formData.append('file', fileInput.files[0]);
 
-{% block content %}
-    Content
-{% endblock %}
+            fetch('/predict', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    displayResult(data.user_choice, data.computer_choice, data.result);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function displayResult(userChoice, computerChoice, result) {
+            let resultsDiv = document.getElementById('results');
+            let resultItem = document.createElement('div');
+            resultItem.classList.add('result-item');
+            resultItem.innerHTML = `
+                <p>Your Choice: <strong>${userChoice}</strong></p>
+                <p>Computer's Choice: <strong>${computerChoice}</strong></p>
+                <p>Result: <strong>${result}</strong></p>
+            `;
+            resultsDiv.appendChild(resultItem);
+        }
+    </script>
+</body>
+</html>
